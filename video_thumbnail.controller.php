@@ -76,4 +76,19 @@ class Video_thumbnailController extends Video_thumbnail
 	{
 		return $this->triggerAfterInsertDocument($obj, true);
 	}
+
+	/**
+	 * 게시글이 삭제될 때 호출됩니다.
+	 * 
+	 * @param object $obj
+	 * @return bool
+	 * @noinspection PhpUnused
+	 */
+	public function triggerAfterDeleteDocument ($obj): bool
+	{
+		$oModel = $this->getModel();
+		$oModel->deleteVideoThumbnailsFromDocumentSrl($obj->document_srl);
+		
+		return true;
+	}
 }

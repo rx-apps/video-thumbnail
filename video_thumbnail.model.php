@@ -247,4 +247,17 @@ class Video_thumbnailModel extends Video_thumbnail
 			'file_srls' => $fileSrl
 		]);
 	}
+
+	/**
+	 * DB에서 게시글 번호가 일치하는 썸네일 기록들을 삭제합니다.
+	 * 
+	 * @param int $documentSrl
+	 * @return object
+	 */
+	public function deleteVideoThumbnailsFromDocumentSrl (int $documentSrl)
+	{
+		return executeQuery('video_thumbnail.deleteVideoThumbnailsByDocumentSrl', [
+			'document_srl' => $documentSrl
+		]);
+	}
 }
