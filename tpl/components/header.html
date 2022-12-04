@@ -1,0 +1,23 @@
+{@ // <!--suppress CheckEmptyScriptTag, HtmlUnknownTag, HtmlUnknownAttribute --> }
+<load target="../scss/style.scss" />
+<load target="../js/script.js" type="body" />
+
+<!-- 헤더 -->
+<div class="x_page-header">
+	<h1>
+		{$lang->video_thumbnail_title}
+	</h1>
+</div>
+
+<!-- 관리자 메뉴 -->
+<ul class="x_nav x_nav-tabs">
+	<!--@foreach($menus as $menu)-->
+	<!--@if($menu[2] ?? true)-->
+	<li class="x_active"|cond="in_array($act, $menu[1])">
+		<a href="{getUrl('', 'module', 'act', $menu[1][0])}">
+			{Context::getLang($menu[0])}
+		</a>
+	</li>
+	<!--@endif-->
+	<!--@endforeach-->
+</ul>

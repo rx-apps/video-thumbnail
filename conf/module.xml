@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<actions>
+		<!-- (관리자) 뷰 액션 -->
+		<action name="dispVideo_thumbnailAdminIndex" type="view" admin_index="true" />
+
+		<!-- (관리자) 컨트롤러 액션 -->
+		<action name="procVideo_thumbnailAdminIndex" type="controller" />
+	</actions>
+</module>
