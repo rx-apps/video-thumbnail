@@ -32,6 +32,9 @@ class Video_thumbnailModel extends Video_thumbnail
 		{
 			case 'youtube':
 				return $this->getYoutubeThumbnailUrl($videoUrl);
+				
+			case 'vimeo':
+				return $this->getVimeoThumbnailUrl($videoUrl);
 		}
 		
 		return null;
@@ -61,6 +64,10 @@ class Video_thumbnailModel extends Video_thumbnail
 			case 'youtu.be':
 			case 'www.youtu.be':
 				return 'youtube';
+				
+			case 'vimeo.com':
+			case 'player.vimeo.com':
+				return 'vimeo';
 		}
 		
 		return null;
@@ -85,6 +92,31 @@ class Video_thumbnailModel extends Video_thumbnail
 	}
 
 	/**
+	 * 비메오 URL에서 썸네일 이미지 URL을 획득합니다.
+	 * 
+	 * @param string $videoUrl
+	 * @return string|null
+	 */
+	private function getVimeoThumbnailUrl (string $videoUrl): ?string
+	{
+		$segments = explode('/', $videoUrl);
+		$lastSegment = end($segments);
+		if (strpos($lastSegment, '?') !== false)
+		{
+			$lastSegment = explode('?', $lastSegment)[0];
+		}
+		
+		$apiUrl = 'https://vimeo.com/api/v2/video/' . $lastSegment . '.json';
+		
+		$ch = $this->getCurlInstance($apiUrl);
+		$output = curl_exec($ch);
+		curl_close($ch);
+		
+		$data = json_decode($output);
+		return $data[0]->thumbnail_large;
+	}
+
+	/**
 	 * 원격지에서 이미지 데이터를 획득합니다.
 	 * 
 	 * @param string $imageUrl
@@ -92,12 +124,8 @@ class Video_thumbnailModel extends Video_thumbnail
 	 */
 	private function getRemoteImageData (string $imageUrl): array
 	{
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $imageUrl);
+		$ch = $this->getCurlInstance($imageUrl);
 		curl_setopt($ch, CURLOPT_HEADER, 1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
 		$output = curl_exec($ch);
 		curl_close($ch);
@@ -120,6 +148,24 @@ class Video_thumbnailModel extends Video_thumbnail
 			'mime' => $mime,
 			'raw' => $raw
 		];
+	}
+
+	/**
+	 * CURL 인스턴스를 생성합니다.
+	 * 
+	 * @param string $url
+	 * @return resource
+	 */
+	private function getCurlInstance (string $url)
+	{
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		
+		return $ch;
 	}
 
 	/**
