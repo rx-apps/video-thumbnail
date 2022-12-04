@@ -7,7 +7,8 @@ class Video_thumbnail extends ModuleObject
 	 */
 	protected static $_insert_triggers = [
 		// [ string $triggerName, string $triggerPosition, string $controllerMethodName ]
-		[ 'document.insertDocument', 'after', 'triggerAfterInsertDocument' ]
+		[ 'document.insertDocument', 'after', 'triggerAfterInsertDocument' ],
+		[ 'document.updateDocument', 'after', 'triggerAfterUpdateDocument' ]
 	];
 
 	/**

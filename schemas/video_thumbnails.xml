@@ -1,0 +1,6 @@
+<table name="video_thumbnails">
+	<column name="file_srl" type="number" size="20" notnull="notnull" primary_key="primary_key" />
+	<column name="document_srl" type="number" size="20" notnull="notnull" index="idx_document_srl" />
+	<column name="video_url" type="varchar" size="255" notnull="notnull" index="idx_video_url" />
+	<column name="regdate" type="date" index="idx_regdate" />
+</table>

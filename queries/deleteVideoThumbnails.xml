@@ -1,0 +1,8 @@
+<query id="deleteVideoThumbnails" action="delete">
+	<tables>
+		<table name="video_thumbnails" />
+	</tables>
+	<conditions>
+		<condition operation="in" column="file_srl" var="file_srls" />
+	</conditions>
+</query>

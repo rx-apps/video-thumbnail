@@ -1,0 +1,13 @@
+<query id="getVideoThumbnails" action="select">
+	<tables>
+		<table name="video_thumbnails" />
+	</tables>
+	<columns>
+		<column name="*" />
+	</columns>
+	<conditions>
+		<condition operation="in" column="file_srl" var="file_srls" />
+		<condition operation="equal" column="document_srl" var="document_srl" />
+		<condition operation="equal" column="video_srl" var="video_url" />
+	</conditions>
+</query>

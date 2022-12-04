@@ -81,7 +81,7 @@ class Video_thumbnailModel extends Video_thumbnail
 			$lastSegment = explode('&', explode('v=', $lastSegment)[1])[0];
 		}
 		
-		return 'https://img.youtube.com/vi/' . $lastSegment . '/maxresdefault.jpg';
+		return 'https://img.youtube.com/vi/' . $lastSegment . '/0.jpg';
 	}
 
 	/**
@@ -195,5 +195,56 @@ class Video_thumbnailModel extends Video_thumbnail
 		}
 		
 		return '';
+	}
+
+	/**
+	 * DB에 썸네일 기록을 추가합니다.
+	 *
+	 * @param int $fileSrl
+	 * @param int $documentSrl
+	 * @param string $videoUrl
+	 * @param string|null $regdate
+	 * @return object
+	 */
+	public function insertVideoThumbnail (int $fileSrl, int $documentSrl, string $videoUrl, string $regdate = null)
+	{
+		return executeQuery('video_thumbnail.insertVideoThumbnail', [
+			'file_srl' => $fileSrl,
+			'document_srl' => $documentSrl,
+			'video_url' => $videoUrl,
+			'regdate' => $regdate
+		]);
+	}
+
+	/**
+	 * DB에서 썸네일 기록들을 게시글 번호로 검색한 결과를 반환합니다.
+	 * 
+	 * @param int $documentSrl
+	 * @return array<object{file_srl: int, document_srl: int, video_url: string, regdate: string}>
+	 */
+	public function getVideoThumbnailsFromDocumentSrl (int $documentSrl): array
+	{
+		$output = executeQueryArray('video_thumbnail.getVideoThumbnails', [
+			'document_srl' => $documentSrl
+		]);
+		if (!$output->toBool())
+		{
+			return [];
+		}
+		
+		return $output->data;
+	}
+
+	/**
+	 * DB에서 파일 번호가 일치하는 썸네일 기록들을 삭제합니다.
+	 * 
+	 * @param $fileSrl
+	 * @return object
+	 */
+	public function deleteVideoThumbnails ($fileSrl)
+	{
+		return executeQuery('video_thumbnail.deleteVideoThumbnails', [
+			'file_srls' => $fileSrl
+		]);
 	}
 }
