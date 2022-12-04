@@ -3,6 +3,23 @@
 class Video_thumbnailModel extends Video_thumbnail
 {
 	/**
+	 * 썸네일 이미지 데이터를 획득합니다.
+	 * 
+	 * @param string $videoUrl
+	 * @return ?array{mime: string, raw: string}
+	 */
+	public function getThumbnailImageData (string $videoUrl): ?array
+	{
+		$thumbnailUrl = $this->getThumbnailUrl($videoUrl);
+		if ($thumbnailUrl === null)
+		{
+			return null;
+		}
+		
+		return $this->getRemoteImageData($thumbnailUrl);
+	}
+	
+	/**
 	 * 썸네일 URL을 획득합니다.
 	 * 
 	 * @param string $videoUrl
@@ -103,5 +120,80 @@ class Video_thumbnailModel extends Video_thumbnail
 			'mime' => $mime,
 			'raw' => $raw
 		];
+	}
+
+	/**
+	 * 문자열에서 영상 URL 목록을 획득합니다.
+	 *
+	 * @param string $content
+	 * @return array<string>
+	 */
+	public function getVideoUrlsFromString (string $content): array
+	{
+		if (preg_match_all('/(?:https?:)?\/\/[^,\s()<>]+(?:\(\w+\)|([^,[:punct:]\s]|\/))/', $content, $matches) === 0)
+		{
+			return [];
+		}
+
+		return $matches[0];
+	}
+
+	/**
+	 * 이미지 데이터를 PHP의 $_FILES 스펙으로 변환합니다.
+	 * 
+	 * @param array{mime: string, raw: string} $imageData
+	 * @return array{name: string, tmp_name: string, size: int, error: int}
+	 */
+	public function getFileInfoFromImageData (array $imageData): array
+	{
+		$extension = $this->getFileExtensionFromMimeType($imageData['mime']);
+		$fileName = sha1($imageData['raw']) . '.' . $extension;
+		
+		$tmpFilePath = sys_get_temp_dir() . '/' . $fileName;
+		file_put_contents($tmpFilePath, $imageData['raw']);
+		
+		return [
+			'name' => $fileName,
+			'tmp_name' => $tmpFilePath,
+			'size' => strlen($imageData['raw']),
+			'error' => UPLOAD_ERR_OK
+		];
+	}
+
+	/**
+	 * MIME 타입를 확장자로 변환합니다.
+	 * 
+	 * @param string $mimeType
+	 * @return string
+	 */
+	private function getFileExtensionFromMimeType (string $mimeType): string
+	{
+		switch ($mimeType)
+		{
+			case 'image/avif':
+				return 'avif';
+				
+			case 'image/bmp':
+				return 'bmp';
+				
+			case 'image/gif':
+				return 'gif';
+				
+			case 'image/jpg':
+			case 'image/jpeg':
+				return 'jpg';
+				
+			case 'image/png':
+				return 'png';
+				
+			case 'image/svg':
+			case 'image/svg+xml':
+				return 'svg';
+				
+			case 'image/webp':
+				return 'webp';
+		}
+		
+		return '';
 	}
 }
