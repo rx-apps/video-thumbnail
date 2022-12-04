@@ -28,4 +28,4 @@ $lang->video_thumbnail_admin_lbl_github_url = '깃헙 URL';
 $lang->video_thumbnail_admin_txt_github_url = '네트워크 상태 불안정 등의 이유로 최신버전 정보가 부정확할 수 있습니다.<br />링크 접속 후 Watch -> Custom -> Releases 체크 후 Apply 버튼을 클릭하여 깃헙 알림센터를 통한 최신버전 알림을 받아볼 수 있습니다.';
 $lang->video_thumbnail_admin_lbl_advertisement = '커피한잔 대신 (광고)';
 $lang->video_thumbnail_admin_txt_advertisement_name = '저희집 주소가 궁금하신가요? 아주 유명한 곳이에요~ (속닥)';
-$lang->video_thumbnail_admin_txt_advertisement_url = 'https://smartstore.naver.com/dsticker/products/5945645517';
+$lang->video_thumbnail_admin_txt_advertisement_url = 'https://smartstore.naver.com/dsticker/products/5945645517?nt_source=github&nt_medium=rx-apps&nt_detail=video-thumbnails';
